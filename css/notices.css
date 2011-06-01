@@ -1,0 +1,130 @@
+#wpi-banner {
+	position: absolute;
+	top: 0;
+	left: 1%;
+	width: 98%;
+	height: auto;
+	z-index: 999999;
+	font-family: "Lucida Grande", Verdana, Arial, "Bitstream Vera Sans", sans-serif;
+}
+#wpi-banner a:focus,
+#wpi-banner a:active {
+	outline: none;
+}
+#wpi-banner .wpi-notice {
+	width: 250px;
+	margin: 0 auto -30px auto;
+	height: 25px;
+	padding-top: 5px;
+	color: white;
+	text-shadow: #000 1px 2px 3px;
+	text-align: center;
+	overflow: hidden;
+}
+#wpi-banner .wpi-shaded {
+	background: rgba(0,0,0,0.85);
+	-moz-border-radius-bottomright: 8px; /* FF1+ */
+	-webkit-border-bottom-right-radius: 8px; /* Saf3+, Chrome */
+	-khtml-border-bottom-right-radius: 8px; /* Konqueror */
+	border-bottom-right-radius: 8px; /* Standard. IE9 */
+	-moz-border-radius-bottomleft: 8px; /* FF1+ */
+	-webkit-border-bottom-left-radius: 8px; /* Saf3+, Chrome */
+	-khtml-border-bottom-left-radius: 8px; /* Konqueror */
+	border-bottom-left-radius: 8px; /* Standard. IE9 */
+}
+#wpi-banner .wpi-notice p {
+	margin: 0;
+}
+#wpi-banner .wpi-notice p .wpi-warning-icon {
+	margin: 0 5px 0 0;
+	vertical-align: middle;
+}
+#wpi-banner .wpi-notice b.warning {
+	color: #d51c1b;
+}
+#wpi-banner .wpi-notice .wpi-toggle-output {
+	margin-left: 10px;
+	color: #f2f2f2;
+}
+#wpi-banner h2 {
+	color: white;
+	font: italic 18px/20px Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+	text-shadow: 0 1px 0 #000000;
+	margin: 20px 5px 5px 5px;
+}
+#wpi-output {
+	width: auto;
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+}
+#wpi-output-wrap {
+	margin: 0;
+	padding: 10px;
+	overflow: hidden;
+}
+#wpi-output code {
+	background: none;
+	color: white;
+}
+#wpi-output table {
+	width: 100%;
+	margin: 0 auto;
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+#wpi-output table tr {
+	border-bottom: 1px solid #555;
+}
+#wpi-output table th {
+	background: rgba(0,0,0,0.6);
+	text-align: left;
+	text-shadow: 0 1px 0 #000000;
+}
+#wpi-output table th.wpi-col-vers {
+	width: 50px;
+}
+#wpi-output table th.wpi-col-loc {
+	width: 350px;
+}
+#wpi-output table th.wpi-col-type,
+#wpi-output table th.wpi-col-lvl {
+	width: 100px;
+}
+#wpi-output table th,
+#wpi-output table td {
+	padding: 8px;
+	font-size: 11px;
+	color: #ccc;
+	line-height: 1em;
+}
+#wpi-output table td {
+	vertical-align: top;
+	background: rgba(0,0,0,0.2);
+}
+#wpi-output table tr:hover td {
+	background: rgba(0,0,0,0.6);
+	color: white;
+}
+#wpi-output table td.wpi-messg {
+	padding: 0;
+}
+#wpi-output table td.wpi-messg>div {
+	padding: 8px;
+	min-height: 40px;
+	max-height: 250px;
+	overflow: auto;
+}
+#wpi-output span.wpi-error {
+	color: red;
+}
+#wpi-output span.wpi-warning {
+	color: orange;
+}
+#wpi-output span.wpi-notice {
+	color: yellow;
+}
+#wpi-output .wpi-no-items {
+	color: #ccc;
+	padding-left: 5px;
+}

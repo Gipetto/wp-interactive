@@ -1,0 +1,49 @@
+#self::BASENAME-wrap textarea {
+	width: 100%;
+	height: 400px;
+}
+#self::BASENAME-input,
+#self::BASENAME-output,
+#self::BASENAME-wrap pre,
+#self::BASENAME-wrap code {
+	font-family: menlo, monaco, courier, monospace;
+	font-size: 12px;
+	background: transparent;
+}
+label.for-code {
+	margin-left: 20px;
+}
+#self::BASENAME-output {
+	-moz-border-radius: 4px; /* FF1+ */
+	-webkit-border-radius: 4px; /* Saf3+, Chrome */
+	-khtml-border-radius: 4px; /* Konqueror */
+	border-radius: 4px; /* Standard. IE9 */
+	border: 1px solid #DFDFDF;
+	background: #FFF;
+	padding: 5px;
+	min-height: 30px;
+}
+#self::BASENAME-output.loading {
+	background: #FFF url(/wp-admin/images/wpspin_light.gif) 50% 50% no-repeat;
+}
+.self::BASENAME-notice {
+	margin: 0 0 10px 0;
+	padding: 5px 10px;
+	background-color: #FFFBCC;
+	border: 1px solid #E6DB55;
+	-moz-border-radius: 8px; /* FF1+ */
+	-webkit-border-radius: 8px; /* Saf3+, Chrome */
+	-khtml-border-radius: 8px; /* Konqueror */
+	border-radius: 8px; /* Standard. IE9 */
+}
+#self::BASENAME-input {
+	display: block;
+	width: 98%;
+	height: 300px;
+}
+#self::BASENAME-form fieldset fieldset {
+	margin: 15px 0;
+}
+#self::BASENAME-clear {
+	float: right;
+}
