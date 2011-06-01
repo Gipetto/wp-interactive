@@ -43,3 +43,8 @@ I have no idea! There's some file path translation stuff that'll probably fail. 
 
 = 1.0 =
 * Initial release
+
+
+== Props ==
+
+Syntax highlighting is provided by [CodeMirror2](http://codemirror.net/)
