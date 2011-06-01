@@ -12,7 +12,7 @@ define('WPI_VERSION', '0.1');
 
 include_once('lib/wp_interactive.class.php');
 include_once('lib/wp_interactive_snippets.php');
-include_once('lib/notices.php');
+#include_once('lib/notices.php');
 include_once('lib/wpi-debug-response.php');
 
 // handle JS request quickly

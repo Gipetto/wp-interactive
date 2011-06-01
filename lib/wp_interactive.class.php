@@ -2,14 +2,12 @@
 
 class wp_interactive {
 	const BASENAME = 'wp-interactive';
-	
-	// protected $bespin_path;
-	// protected $bespin = 'BespinEmbedded.js';
+	const CODEMIRROR = 'CodeMirror2';
 	
 	protected $tmpfile = '/tmp/php-eval.php';	// yep, only supporting *nix
 	protected $errors;
 	protected $old_error_reporting;
-	
+		
 	public function __construct() {
 		$this->base_url = trailingslashit(WP_PLUGIN_URL).'wp-interactive';
 		$this->lib_path = $this->base_url.'/lib';
@@ -18,8 +16,8 @@ class wp_interactive {
 		add_action('wp_ajax_wp_interactive', array($this, 'ajax_handler'));
 		
 		if (!empty($_GET['page']) && $_GET['page'] == self::BASENAME) {
-			wp_enqueue_script('codemirror', $this->lib_path.'/CodeMirror-2.0/lib/codemirror.js', array(), WPI_VERSION);
-			wp_enqueue_style('codemirror', $this->lib_path.'/CodeMirror-2.0/lib/codemirror.css', array(), WPI_VERSION);		
+			wp_enqueue_script('codemirror', $this->lib_path.'/'.self::CODEMIRROR.'/lib/codemirror.js', array(), WPI_VERSION);
+			wp_enqueue_style('codemirror', $this->lib_path.'/'.self::CODEMIRROR.'/lib/codemirror.css', array(), WPI_VERSION);		
 		
 			$resources = array(
 				'xml' => array(
@@ -48,10 +46,10 @@ class wp_interactive {
 				foreach ($config['has'] as $r_type) {
 					switch ($r_type) {
 						case 'js':
-							wp_enqueue_script('codemirror-'.$type, $this->lib_path.'/CodeMirror-2.0/mode/'.$type.'/'.$type.'.js', array($config['requires']), WPI_VERSION);
+							wp_enqueue_script('codemirror-'.$type, $this->lib_path.'/'.self::CODEMIRROR.'/mode/'.$type.'/'.$type.'.js', array($config['requires']), WPI_VERSION);
 							break;
 						case 'css':
-							wp_enqueue_style('codemirror-'.$type, $this->lib_path.'/CodeMirror-2.0/mode/'.$type.'/'.$type.'.css', array($config['requires']), WPI_VERSION);
+							wp_enqueue_style('codemirror-'.$type, $this->lib_path.'/'.self::CODEMIRROR.'/mode/'.$type.'/'.$type.'.css', array($config['requires']), WPI_VERSION);
 							break;
 					}
 				}
