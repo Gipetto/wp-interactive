@@ -9,15 +9,16 @@ class wp_interactive {
 	protected $old_error_reporting;
 		
 	public function __construct() {
+		$this->base_path = trailingslashit(WP_PLUGIN_DIR).'wp-interactive';
 		$this->base_url = trailingslashit(WP_PLUGIN_URL).'wp-interactive';
-		$this->lib_path = $this->base_url.'/lib';
+		$this->lib_url = $this->base_url.'/lib';
 
 		add_action('admin_menu', array($this, 'admin_menu'));
 		add_action('wp_ajax_wp_interactive', array($this, 'ajax_handler'));
 		
 		if (!empty($_GET['page']) && $_GET['page'] == self::BASENAME) {
-			wp_enqueue_script('codemirror', $this->lib_path.'/'.self::CODEMIRROR.'/lib/codemirror.js', array(), WPI_VERSION);
-			wp_enqueue_style('codemirror', $this->lib_path.'/'.self::CODEMIRROR.'/lib/codemirror.css', array(), WPI_VERSION);		
+			wp_enqueue_script('codemirror', $this->lib_url.'/'.self::CODEMIRROR.'/lib/codemirror.js', array(), WPI_VERSION);
+			wp_enqueue_style('codemirror', $this->lib_url.'/'.self::CODEMIRROR.'/lib/codemirror.css', array(), WPI_VERSION);		
 		
 			$resources = array(
 				'xml' => array(
@@ -46,10 +47,10 @@ class wp_interactive {
 				foreach ($config['has'] as $r_type) {
 					switch ($r_type) {
 						case 'js':
-							wp_enqueue_script('codemirror-'.$type, $this->lib_path.'/'.self::CODEMIRROR.'/mode/'.$type.'/'.$type.'.js', array($config['requires']), WPI_VERSION);
+							wp_enqueue_script('codemirror-'.$type, $this->lib_url.'/'.self::CODEMIRROR.'/mode/'.$type.'/'.$type.'.js', array($config['requires']), WPI_VERSION);
 							break;
 						case 'css':
-							wp_enqueue_style('codemirror-'.$type, $this->lib_path.'/'.self::CODEMIRROR.'/mode/'.$type.'/'.$type.'.css', array($config['requires']), WPI_VERSION);
+							wp_enqueue_style('codemirror-'.$type, $this->lib_url.'/'.self::CODEMIRROR.'/mode/'.$type.'/'.$type.'.css', array($config['requires']), WPI_VERSION);
 							break;
 					}
 				}
@@ -67,44 +68,7 @@ class wp_interactive {
 // Admin page
 
 	public function admin_page() {
-		global $wpi_snippets;
-		echo '
-			<div class="wrap" id="'.self::BASENAME.'-wrap">
-				<h2>'.__('WP Interactive', self::BASENAME).'</h2>
-				<form id="'.self::BASENAME.'-form">
-					<!-- input -->
-					<fieldset class="'.self::BASENAME.'-input">
-						<h2>'.__('Input:', self::BASENAME).'</h2>
-						<fieldset>
-							<label for="'.self::BASENAME.'-snippets">Snippets</label>
-							<select name="'.self::BASENAME.'-snippets" id="'.self::BASENAME.'-snippets">';
-		foreach ($wpi_snippets as $key => $snippet) {
-			echo '
-								<option value="'.esc_attr($key).'">'.$this->humanize($key).'</option>';
-		}				
-		echo '
-							</select>
-							<input type="button" class="button" name="'.self::BASENAME.'-insert-snippet" id="'.self::BASENAME.'-insert-snippet" value="'.__('Insert Snippet', self::BASENAME).'" />
-						</fieldset>
-						<fieldset>
-							<textarea id="'.self::BASENAME.'-input" name="'.self::BASENAME.'-code">'.esc_textarea($this->default_text()).'</textarea>
-						</fieldset>
-						<p>
-							<input type="button" class="button" value="'.__('Clear Editor', self::BASENAME).'" name="'.self::BASENAME.'-clear" id="'.self::BASENAME.'-clear" />
-							<input type="button" class="button button-primary" value="'.__('Eval', self::BASENAME).'" name="'.self::BASENAME.'-submit" id="'.self::BASENAME.'-submit" />
-						</p>
-					</fieldset>
-				</form>
-							
-				<!-- output -->
-				<h2>'.__('Output:', self::BASENAME).'</h2>
-				<div id="'.self::BASENAME.'-messages" class="'.self::BASENAME.'-notice" style="display: none;"></div>
-				<div id="'.self::BASENAME.'-output"><pre class="output">'.__('It putz teh PHP codez above and it makes with the Eval.', self::BASENAME).'</pre></div>
-			</div>
-			<script type="text/javascript">
-				var wpi_snippets = '.json_encode($wpi_snippets).';
-				var wpi_default_text = '.json_encode($this->default_text()).';
-			</script>';
+		echo $this->load_view('admin-page');
 	}
 	
 	protected function default_text() {
@@ -133,14 +97,14 @@ class wp_interactive {
 		
 		// check syntax - requires linux, system capabilities
 		file_put_contents($this->tmpfile, $code);
-		$ret = `/usr/bin/env php -l < $this->tmpfile`;
-		if (strpos($ret, 'Errors parsing')) {
+		$ret = `/usr/bin/env php -l < $this->tmpfile 2>&1`;
+		if (strpos($ret, 'Errors parsing') !== false) {
 			unlink($this->tmpfile);
-			$this->return_result(array(
+			return array(
 				'success' => false,
 				'eval' => 'NULL (see error report)',
-				'message' => $ret
-			));
+				'message' => nl2br($ret)
+			);
 		}
 				
 		$this->set_error_handler();
@@ -216,6 +180,25 @@ class wp_interactive {
 	}
 
 // Utils
+
+	public function load_view($viewfile, $params = array()) {
+		$ret = '';
+		$view_filename = $this->base_path.'/views/'.$viewfile.'.php';
+		
+		if (is_file($view_filename)) {
+			ob_start();
+			extract($params);
+			include($view_filename);
+			$ret = ob_get_clean();
+		}
+		
+		return $ret;
+	}
+	
+	public function get_snippets() {
+		global $wpi_snippets;
+		return apply_filters('wpi-snippets', $wpi_snippets);
+	}
 	
 	public function humanize($str) {
 		$replacements = array(
