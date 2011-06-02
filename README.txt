@@ -50,6 +50,11 @@ I have no idea! There's some file path translation stuff that'll probably fail. 
 Syntax highlighting is provided by [CodeMirror2](http://codemirror.net/)
 
 
+== Known Issues ==
+
+- Deleting posts with the Google Sitemaps plugin enabled will trigger a crap-ton of notices. I just haven't had it in me to track these down yet.
+
+
 == Changelog ==
 
 = 1.0 =
