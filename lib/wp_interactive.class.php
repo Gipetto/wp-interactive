@@ -201,8 +201,9 @@ class wp_interactive {
 	}
 	
 	public function get_snippets() {
-		global $wpi_snippets;
-		return apply_filters('wpi-snippets', $wpi_snippets);
+		$snippets = apply_filters('wpi-snippets', $GLOBALS['wpi_snippets']);
+		ksort($snippets);
+		return $snippets;
 	}
 	
 	public function humanize($str) {

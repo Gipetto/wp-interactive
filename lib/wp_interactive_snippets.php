@@ -26,4 +26,29 @@ if (!empty(\$atts->posts)) {
 }
 REBUILDTHUMBS;
 
+$wpi_snippets['get_post_postmeta'] = <<<GETPOSTMETA
+// set the post_ID you want to inspect
+\$post_ID = 1;
+
+// fetch
+\$meta = get_post_meta(\$post_ID, '');
+if (!empty(\$meta)) {
+  foreach (\$meta as \$meta_key => \$meta_value) {
+    echo \$meta_key.': ';
+    // it doesn't happen often, but postmeta keys can have multiple values
+    foreach (\$meta_value as \$value) {
+      \$value = maybe_unserialize(\$value);
+
+      if (is_scalar(\$value)) {
+	var_dump(\$value);
+      }
+      else {
+	print_r(\$value);
+      }
+    }
+    echo '-------------------'.PHP_EOL;
+  }
+}
+GETPOSTMETA;
+
 ?>
