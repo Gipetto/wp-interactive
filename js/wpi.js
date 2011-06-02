@@ -2,6 +2,7 @@
 ;(function($){	
 	$(function() {
 		// init editor
+		var hlLine;
 		var WPIEditor = CodeMirror.fromTextArea(document.getElementById('self::BASENAME-input'), {
 			lineNumbers: true,
 			matchBrackets: true,
@@ -10,10 +11,15 @@
 			indentWithTabs: true,
 			enterMode: "indent",
 			tabMode: "shift",
-			electricChars: true
+			electricChars: true,
+			onCursorActivity: function() {
+				WPIEditor.setLineClass(hlLine, null);
+				hlLine = WPIEditor.setLineClass(WPIEditor.getCursor().line, "activeline");
+			}
 		});
 		WPIEditor.focus();
 		WPIEditor.setCursor(2,2);
+		var hlLine = WPIEditor.setLineClass(WPIEditor.getCursor().line, "activeline");
 		
 		// submit handler
 		$('#self::BASENAME-submit').live('click', function(e) {

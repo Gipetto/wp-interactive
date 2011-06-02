@@ -47,3 +47,25 @@ label.for-code {
 #self::BASENAME-clear {
 	float: right;
 }
+/* CodeMirror specific styling */
+.CodeMirror-scroll {
+  height: auto;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+.CodeMirror .CodeMirror-lines {
+	-moz-border-radius: 4px; /* FF1+ */
+	-webkit-border-radius: 4px; /* Saf3+, Chrome */
+	-khtml-border-radius: 4px; /* Konqueror */
+	border-radius: 4px; /* Standard. IE9 */
+	border: 1px solid #EEE;	
+}
+.CodeMirror .CodeMirror-gutter {
+	background-color: #EEE;
+}
+.CodeMirror .CodeMirror-gutter-text {
+	color: #B0B0B0;
+}
+.CodeMirror .activeline {
+	background: #F0FCFF !important;
+}

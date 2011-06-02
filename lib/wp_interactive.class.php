@@ -112,7 +112,6 @@ class wp_interactive {
 		ob_start();
 		include($this->tmpfile);
 		$eval = ob_get_clean();
-		
 		$eval = htmlentities($eval);
 		
 		unlink($this->tmpfile);
