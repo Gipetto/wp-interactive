@@ -11,11 +11,13 @@ This plugin allows admin users to run PHP code directly via the WordPress Admin 
 
 == Description ==
 
+The PHP code is captured using the `admin-ajax` hooks and executes within a fully baked WordPress scope. All WordPress functions are available for use.
+
 **This plugin is NOT recommended for production environments.**
 
 - Adds `WP Interactive` submenu in the `Tools` menu
 - Allows user to enter PHP code to be directly executed inside a WordPress scoped environment
-- Users can save common snippets for re-use
+- Users can add common snippets for re-use using the `wpi-snippets` filter
 
 
 == Installation ==

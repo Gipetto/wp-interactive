@@ -1,8 +1,13 @@
 <?php
 $snippets = $this->get_snippets();
 ?>
-<div class="wrap" id="<?php echo self::BASENAME; ?>'-wrap">
+<div class="wrap" id="<?php echo self::BASENAME; ?>-wrap">
+	<?php screen_icon(); ?>
 	<h2><?php _e('WP Interactive', self::BASENAME); ?></h2>
+	<div class="<?php echo self::BASENAME; ?>-description">
+		<p><?php _e('Use the <i>Input</i> section below to send PHP code directly to WordPress for execution.', self::BASENAME); ?></p>
+		<p><?php _e('Additional snippets can be filtered in using the <code>wpi-snippets</code> filter.', self::BASENAME); ?></p>
+	</p>
 	<form id="<?php echo self::BASENAME; ?>-form">
 		<!-- input -->
 		<fieldset class="<?php echo self::BASENAME; ?>-input">

@@ -1,0 +1,1 @@
+<p><?php _e('I sure do hope that you&rsquo;re not running this on a production server&hellip;', self::BASENAME); ?></p>

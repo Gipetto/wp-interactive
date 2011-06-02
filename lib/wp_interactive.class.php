@@ -15,6 +15,7 @@ class wp_interactive {
 
 		add_action('admin_menu', array($this, 'admin_menu'));
 		add_action('wp_ajax_wp_interactive', array($this, 'ajax_handler'));
+		add_action('tool_box', array($this, 'tool_box'));
 		
 		if (!empty($_GET['page']) && $_GET['page'] == self::BASENAME) {
 			wp_enqueue_script('codemirror', $this->lib_url.'/'.self::CODEMIRROR.'/lib/codemirror.js', array(), WPI_VERSION);
@@ -63,6 +64,8 @@ class wp_interactive {
 	
 	public function admin_menu() {
 		$this->menu_item_id = add_submenu_page('tools.php', __('WP Interactive', self::BASENAME), __('WP Interactive', self::BASENAME), 'manage_options', self::BASENAME, array($this, 'admin_page'));
+		$contextual_help = $this->load_view('contextual-help');
+		add_contextual_help($this->menu_item_id, $contextual_help);
 	}
 	
 // Admin page
@@ -71,8 +74,11 @@ class wp_interactive {
 		echo $this->load_view('admin-page');
 	}
 	
-	protected function default_text() {
-		return '<?php'.PHP_EOL.PHP_EOL.PHP_EOL."\t".PHP_EOL.'?>';
+	
+	public function tool_box() {
+		if (current_user_can('manage_options')) {
+			echo $this->load_view('tool-box');
+		}
 	}
 
 // Ajax
@@ -205,6 +211,10 @@ class wp_interactive {
 			'_' => ' '
 		);
 		return ucwords(strtr($str, $replacements));
+	}
+	
+	protected function default_text() {
+		return '<?php'.PHP_EOL.PHP_EOL.PHP_EOL."\t".PHP_EOL.'?>';
 	}
 }
 
