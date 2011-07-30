@@ -4,7 +4,7 @@ class wp_interactive {
 	const BASENAME = 'wp-interactive';
 	const CODEMIRROR = 'CodeMirror2';
 	
-	protected $tmpfile = '/tmp/php-eval.php';	// yep, only supporting *nix
+	protected $tmpfile = '/tmp/php-eval.php';	// fallback on unix if uploads not writable
 	protected $errors;
 	protected $old_error_reporting;
 		
@@ -101,14 +101,26 @@ class wp_interactive {
 		$code = stripslashes($_POST['code']);
 		$eval = $message = null;
 		
-		// check syntax - requires linux, system capabilities
+		$uploads = wp_upload_dir();
+		if (is_writable($uploads['basedir'])) {
+			$this->tmpfile = trailingslashit($uploads['basedir']).'php-eval.php';
+		}		
 		file_put_contents($this->tmpfile, $code);
-		$ret = `/usr/bin/env php -l < $this->tmpfile 2>&1`;
+
+		if (PHP_SHLIB_SUFFIX == 'so') {
+			// unix
+			$ret = `/usr/bin/env php -l < $this->tmpfile 2>&1`;
+		}
+		else {
+			// win, not sure if this is even right, maybe a win user can halp?
+			$ret = `php.exe -l $this->tmpfile`;
+		}
+		
 		if (strpos($ret, 'Errors parsing') !== false) {
 			unlink($this->tmpfile);
 			return array(
 				'success' => false,
-				'eval' => 'NULL (see error report)',
+				'eval' => __('NULL (see error report)', self::BASENAME),
 				'message' => nl2br($ret)
 			);
 		}
@@ -138,20 +150,17 @@ class wp_interactive {
 	}
 	
 	protected function return_result($result) {
-		// $d = new wpi_debug_response('notice', 'test message', true);
-		// $result['debug'] = $d->__toString();
-		
 		header('content-type: text/javascript');
 		$json = json_encode($result);
 		if (json_last_error() != JSON_ERROR_NONE) {
 			$json_errors = array(
-			    JSON_ERROR_NONE => 'No error has occurred',
-			    JSON_ERROR_DEPTH => 'The maximum stack depth has been exceeded',
-			    JSON_ERROR_CTRL_CHAR => 'Control character error, possibly incorrectly encoded',
-			    JSON_ERROR_SYNTAX => 'Syntax error',
-				JSON_ERROR_UTF8 => 'Malformed UTF-8 characters, possibly incorrectly encoded'
+			    JSON_ERROR_NONE => __('No error has occurred', self::BASENAME),
+			    JSON_ERROR_DEPTH => __('The maximum stack depth has been exceeded', self::BASENAME),
+			    JSON_ERROR_CTRL_CHAR => __('Control character error, possibly incorrectly encoded', self::BASENAME),
+			    JSON_ERROR_SYNTAX => __('Syntax error', self::BASENAME),
+				JSON_ERROR_UTF8 => __('Malformed UTF-8 characters, possibly incorrectly encoded', self::BASENAME)
 			);
-			error_log(__METHOD__.' - JSON DECODE ERROR: '.$json_errors[json_last_error()]);
+			error_log(__METHOD__.' - '.__('JSON DECODE ERROR:', self::BASENAME).' '.$json_errors[json_last_error()]);
 		}
 		echo $json;
 		exit;
@@ -173,7 +182,7 @@ class wp_interactive {
 			case E_USER_ERROR:
 				$this->return_result(array(
 					'success' => false,
-					'eval' => 'NULL (see error reoprt)',
+					'eval' => __('NULL (see error reoprt)', self::BASENAME),
 					'message' => $errno.': '.$errstr.' in '.$errfile.' on line '.$errline.PHP_EOL
 				));
 				break;

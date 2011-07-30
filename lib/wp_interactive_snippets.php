@@ -3,9 +3,11 @@
 global $wpi_snippets;
 $wpi_snippets = array();
 
+// Rebuild Image Thumbnails
+$rit_comment = __('Rebuild all image thumbnails - this will probably run out of memory on large installs', wp_interactive::BASENAME);
 $wpi_snippets['rebuild_image_thumbnails'] = <<<REBUILDTHUMBS
 /**
- * Rebuild all image thumbnails - this will probably run out of memory on large installs
+ * {$rit_comment}
  */
 \$atts = new WP_Query(array(
     'post_type' => 'attachment',
@@ -26,8 +28,11 @@ if (!empty(\$atts->posts)) {
 }
 REBUILDTHUMBS;
 
+// Get Post Meta
+$gpp_comment_one = __('set the post_ID you want to inspect', wp_interactive::BASENAME);
+$gpp_comment_two = __('it doesn\'t happen often, but postmeta keys can have multiple values', wp_interactive::BASENAME);
 $wpi_snippets['get_post_postmeta'] = <<<GETPOSTMETA
-// set the post_ID you want to inspect
+// {$gpp_comment_one}
 \$post_ID = 1;
 
 // fetch
@@ -35,7 +40,7 @@ $wpi_snippets['get_post_postmeta'] = <<<GETPOSTMETA
 if (!empty(\$meta)) {
   foreach (\$meta as \$meta_key => \$meta_value) {
     echo \$meta_key.': ';
-    // it doesn't happen often, but postmeta keys can have multiple values
+    // {$gpp_comment_two}
     foreach (\$meta_value as \$value) {
       \$value = maybe_unserialize(\$value);
 
