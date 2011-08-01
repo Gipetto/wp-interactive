@@ -57,6 +57,10 @@ Syntax highlighting is provided by [CodeMirror2](http://codemirror.net/)
 
 == Changelog ==
 
+= 1.0.1 =
+* Consistency tweaks
+* Prepping for Windows compat (should anyone ever want to try)
+
 = 1.0 =
 * Initial release
 
