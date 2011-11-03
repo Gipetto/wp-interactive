@@ -22,11 +22,11 @@ The PHP code is captured using the `admin-ajax` hooks and executes within a full
 
 == Installation ==
 
-Installation is easy:
+Installation is sorta easy:
 
-1. Upload the `wp-interactive` folder to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-
+1. Clone the WP Interactive plugin on your server using Git
+1. Init submodules on the checkout
+1. Active the plugin in WordPress
 
 == Frequently Asked Questions ==
 
