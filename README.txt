@@ -3,8 +3,8 @@ Contributors: shawnparker
 Donate link: http://top-frog.com/donate
 Tags: wordpress, interactive, php, development, theme, plugin, console
 Requires at least: 3.0
-Tested up to: 3.2
-Stable tag: 1.0.1
+Tested up to: 3.5
+Stable tag: 1.0.2
  
 This plugin allows admin users to run PHP code directly via the WordPress Admin to assist with development of plugins and themes.
 
@@ -47,7 +47,7 @@ I have no idea! There's some file path translation stuff that'll probably fail. 
 
 == Props ==
 
-Syntax highlighting is provided by [CodeMirror2](http://codemirror.net/)
+Syntax highlighting is provided by [CodeMirror](http://codemirror.net/)
 
 
 == Known Issues ==
@@ -56,6 +56,9 @@ Syntax highlighting is provided by [CodeMirror2](http://codemirror.net/)
 
 
 == Changelog ==
+= 1.0.2 =
+* Work with the latest CodeMirror
+* Change CodeMirror submodule as the old one no longer exists
 
 = 1.0.1 =
 * Consistency tweaks

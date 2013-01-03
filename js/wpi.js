@@ -13,13 +13,13 @@
 			tabMode: "shift",
 			electricChars: true,
 			onCursorActivity: function() {
-				WPIEditor.setLineClass(hlLine, null);
-				hlLine = WPIEditor.setLineClass(WPIEditor.getCursor().line, "activeline");
+				WPIEditor.removeLineClass(hlLine);
+				hlLine = WPIEditor.addLineClass(WPIEditor.getCursor().line, "activeline");
 			}
 		});
 		WPIEditor.focus();
 		WPIEditor.setCursor(2,2);
-		var hlLine = WPIEditor.setLineClass(WPIEditor.getCursor().line, "activeline");
+		var hlLine = WPIEditor.addLineClass(WPIEditor.getCursor().line, "activeline");
 		
 		// submit handler
 		$('#self::BASENAME-submit').live('click', function(e) {

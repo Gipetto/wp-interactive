@@ -69,3 +69,7 @@ label.for-code {
 .CodeMirror .activeline {
 	background: #F0FCFF !important;
 }
+/* Default CodeMirror now is to autoscroll, need this to auto adjust height */
+.CodeMirror {
+	height: auto;
+}
