@@ -56,6 +56,9 @@ Syntax highlighting is provided by [CodeMirror](http://codemirror.net/)
 
 
 == Changelog ==
+= 1.0.2 =
+* Work with the latest CodeMirror
+* Change CodeMirror submodule as the old one no longer exists
 
 = 1.0.1 =
 * Consistency tweaks
