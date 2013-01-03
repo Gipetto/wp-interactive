@@ -3,7 +3,7 @@
 Plugin Name: WP Interactive
 Plugin URI: http://top-frog.com
 Description: Interactively run PHP from the WordPress admin. *NIX required. THIS IS A DEVELOPER TOOL! If you're not careful you can really really break things.
-Version: 1.0.1
+Version: 1.0.2
 Author: Shawn Parker
 Author URI: http://top-frog.com 
 */
