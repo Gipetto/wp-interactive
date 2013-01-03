@@ -3,8 +3,8 @@ Contributors: shawnparker
 Donate link: http://top-frog.com/donate
 Tags: wordpress, interactive, php, development, theme, plugin, console
 Requires at least: 3.0
-Tested up to: 3.2
-Stable tag: 1.0.1
+Tested up to: 3.5
+Stable tag: 1.0.2
  
 This plugin allows admin users to run PHP code directly via the WordPress Admin to assist with development of plugins and themes.
 
