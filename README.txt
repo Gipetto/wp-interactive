@@ -47,7 +47,7 @@ I have no idea! There's some file path translation stuff that'll probably fail. 
 
 == Props ==
 
-Syntax highlighting is provided by [CodeMirror2](http://codemirror.net/)
+Syntax highlighting is provided by [CodeMirror](http://codemirror.net/)
 
 
 == Known Issues ==
