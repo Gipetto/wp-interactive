@@ -2,7 +2,7 @@
 
 class wp_interactive {
 	const BASENAME = 'wp-interactive';
-	const CODEMIRROR = 'CodeMirror2';
+	const CODEMIRROR = 'CodeMirror';
 	
 	protected $tmpfile = '/tmp/php-eval.php';	// fallback on unix if uploads not writable
 	protected $errors;
