@@ -3,11 +3,11 @@
 class wp_interactive {
 	const BASENAME = 'wp-interactive';
 	const CODEMIRROR = 'CodeMirror';
-	
+
 	protected $tmpfile = '/tmp/php-eval.php';	// fallback on unix if uploads not writable
 	protected $errors;
 	protected $old_error_reporting;
-		
+
 	public function __construct() {
 		$this->base_path = trailingslashit(WP_PLUGIN_DIR).'wp-interactive';
 		$this->base_url = trailingslashit(WP_PLUGIN_URL).'wp-interactive';
@@ -16,11 +16,11 @@ class wp_interactive {
 		add_action('admin_menu', array($this, 'admin_menu'));
 		add_action('wp_ajax_wp_interactive', array($this, 'ajax_handler'));
 		add_action('tool_box', array($this, 'tool_box'));
-		
+
 		if (!empty($_GET['page']) && $_GET['page'] == self::BASENAME) {
 			wp_enqueue_script('codemirror', $this->lib_url.'/'.self::CODEMIRROR.'/lib/codemirror.js', array(), WPI_VERSION);
-			wp_enqueue_style('codemirror', $this->lib_url.'/'.self::CODEMIRROR.'/lib/codemirror.css', array(), WPI_VERSION);		
-		
+			wp_enqueue_style('codemirror', $this->lib_url.'/'.self::CODEMIRROR.'/lib/codemirror.css', array(), WPI_VERSION);
+
 			$resources = array(
 				'xml' => array(
 					'requires' => 'codemirror',
@@ -43,7 +43,7 @@ class wp_interactive {
 					'has' => array('js')
 				)
 			);
-			
+
 			foreach ($resources as $type => $config) {
 				foreach ($config['has'] as $r_type) {
 					switch ($r_type) {
@@ -61,20 +61,29 @@ class wp_interactive {
 			wp_enqueue_style('wp-interactive-css', '/index.php?wpi_action=wpi_css', array(), WPI_VERSION, 'all');
 		}
 	}
-	
+
 	public function admin_menu() {
 		$this->menu_item_id = add_submenu_page('tools.php', __('WP Interactive', self::BASENAME), __('WP Interactive', self::BASENAME), 'manage_options', self::BASENAME, array($this, 'admin_page'));
-		$contextual_help = $this->load_view('contextual-help');
-		add_contextual_help($this->menu_item_id, $contextual_help);
+		add_action('load-'.$this->menu_item_id, array( $this, 'help_tab' ) );
 	}
-	
+
+	public function help_tab() {
+		$contextual_help = $this->load_view('contextual-help');
+		$screen = get_current_screen();
+		$screen->add_help_tab( array(
+			'id'	=> 'wp-interactive-help',
+			'title'	=> __('WP Interactive', 'wp-interactive'),
+			'content'	=> $contextual_help,
+		) );
+	}
+
 // Admin page
 
 	public function admin_page() {
 		echo $this->load_view('admin-page');
 	}
-	
-	
+
+
 	public function tool_box() {
 		if (current_user_can('manage_options')) {
 			echo $this->load_view('tool-box');
@@ -82,29 +91,29 @@ class wp_interactive {
 	}
 
 // Ajax
-	
+
 	public function ajax_handler() {
 		if (!empty($_POST['wpi_action'])) {
 			$method = $_POST['wpi_action'];
-			
+
 			if (method_exists($this, $method)) {
 				$ret = $this->$method();
 			}
-			
+
 			$this->return_result($ret);
 		}
 	}
 
 // Core
-	
+
 	protected function process() {
 		$code = stripslashes($_POST['code']);
 		$eval = $message = null;
-		
+
 		$uploads = wp_upload_dir();
 		if (is_writable($uploads['basedir'])) {
 			$this->tmpfile = trailingslashit($uploads['basedir']).'php-eval.php';
-		}		
+		}
 		file_put_contents($this->tmpfile, $code);
 
 		if (PHP_SHLIB_SUFFIX == 'so') {
@@ -115,7 +124,7 @@ class wp_interactive {
 			// win, not sure if this is even right, maybe a win user can halp?
 			$ret = `php.exe -l $this->tmpfile`;
 		}
-		
+
 		if (strpos($ret, 'Errors parsing') !== false) {
 			unlink($this->tmpfile);
 			return array(
@@ -124,14 +133,14 @@ class wp_interactive {
 				'message' => nl2br($ret)
 			);
 		}
-				
+
 		$this->set_error_handler();
-		
+
 		ob_start();
 		include($this->tmpfile);
 		$eval = ob_get_clean();
 		$eval = htmlentities($eval);
-		
+
 		unlink($this->tmpfile);
 		$this->restore_error_handler();
 
@@ -145,10 +154,10 @@ class wp_interactive {
 				$message .= $error['errno'].': '.$error['errstr'].' in '.$error['errfile'].' on line '.$error['errline'].PHP_EOL;
 			}
 		}
-		
+
 		return compact('success', 'eval', 'message');
 	}
-	
+
 	protected function return_result($result) {
 		header('content-type: text/javascript');
 		$json = json_encode($result);
@@ -171,7 +180,7 @@ class wp_interactive {
 		error_reporting(-1);
 		set_error_handler(array($this, 'handle_errors'));
 	}
-	
+
 	protected function restore_error_handler() {
 		ini_set('error_reporting', $this->old_error_reporting);
 		restore_error_handler();
@@ -198,23 +207,23 @@ class wp_interactive {
 	public function load_view($viewfile, $params = array()) {
 		$ret = '';
 		$view_filename = $this->base_path.'/views/'.$viewfile.'.php';
-		
+
 		if (is_file($view_filename)) {
 			ob_start();
 			extract($params);
 			include($view_filename);
 			$ret = ob_get_clean();
 		}
-		
+
 		return $ret;
 	}
-	
+
 	public function get_snippets() {
 		$snippets = apply_filters('wpi-snippets', $GLOBALS['wpi_snippets']);
 		ksort($snippets);
 		return $snippets;
 	}
-	
+
 	public function humanize($str) {
 		$replacements = array(
 			'-' => ' ',
@@ -222,10 +231,9 @@ class wp_interactive {
 		);
 		return ucwords(strtr($str, $replacements));
 	}
-	
+
 	protected function default_text() {
 		return '<?php'.PHP_EOL.PHP_EOL.PHP_EOL."\t".PHP_EOL.'?>';
 	}
 }
 
-?>
