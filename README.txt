@@ -2,9 +2,12 @@
 Contributors: shawnparker
 Donate link: http://top-frog.com/donate
 Tags: wordpress, interactive, php, development, theme, plugin, console
-Requires at least: 3.0
-Tested up to: 3.5
-Stable tag: 1.0.2
+Requires PHP: 7.4
+Requires at least: 5.7
+Tested up to: 6.3
+Stable tag: 1.1.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
  
 This plugin allows admin users to run PHP code directly via the WordPress Admin to assist with development of plugins and themes.
 
@@ -28,6 +31,10 @@ Installation is sorta easy:
 1. Init submodules on the checkout
 1. Active the plugin in WordPress
 
+== Extending ==
+
+- Additional snippets can be loaded in using the `wpi-snippets` filter. See `lib/sp_interactive_snippets.php` for more detail.
+
 == Frequently Asked Questions ==
 
 = Will you hate me if I put this on a Production Server? =
@@ -47,7 +54,7 @@ I have no idea! There's some file path translation stuff that'll probably fail. 
 
 == Props ==
 
-Syntax highlighting is provided by [CodeMirror](http://codemirror.net/)
+Syntax highlighting is provided by the WP supplied instance of [CodeMirror](http://codemirror.net/)
 
 
 == Known Issues ==
@@ -56,6 +63,11 @@ Syntax highlighting is provided by [CodeMirror](http://codemirror.net/)
 
 
 == Changelog ==
+= 1.1.0 =
+* Switch to using WP supplied CodeMirror
+* Require WP 5.7
+* Require PHP 7.4+
+
 = 1.0.2 =
 * Work with the latest CodeMirror
 * Change CodeMirror submodule as the old one no longer exists

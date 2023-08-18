@@ -2,72 +2,37 @@
 
 class wp_interactive {
 	const BASENAME = 'wp-interactive';
-	const CODEMIRROR = 'CodeMirror';
+	
+	protected string $base_path;
+	protected string $base_url;
+	protected string $menu_item_id;
 
-	protected $tmpfile = '/tmp/php-eval.php';	// fallback on unix if uploads not writable
-	protected $errors;
-	protected $old_error_reporting;
+	protected string $tmpfile = '/tmp/php-eval.php';	// fallback on unix if uploads not writable
+	protected array $errors;
+	protected string $old_error_reporting;
 
 	public function __construct() {
 		$this->base_path = trailingslashit(WP_PLUGIN_DIR).'wp-interactive';
 		$this->base_url = trailingslashit(WP_PLUGIN_URL).'wp-interactive';
-		$this->lib_url = $this->base_url.'/lib';
 
 		add_action('admin_menu', array($this, 'admin_menu'));
 		add_action('wp_ajax_wp_interactive', array($this, 'ajax_handler'));
 		add_action('tool_box', array($this, 'tool_box'));
+		
+		wp_enqueue_editor();
 
 		if (!empty($_GET['page']) && $_GET['page'] == self::BASENAME) {
-			wp_enqueue_script('codemirror', $this->lib_url.'/'.self::CODEMIRROR.'/lib/codemirror.js', array(), WPI_VERSION);
-			wp_enqueue_style('codemirror', $this->lib_url.'/'.self::CODEMIRROR.'/lib/codemirror.css', array(), WPI_VERSION);
-
-			$resources = array(
-				'xml' => array(
-					'requires' => 'codemirror',
-					'has' => array('js', 'css')
-				),
-				'javascript' => array(
-					'requires' => 'codemirror-xml',
-					'has' => array('js', 'css')
-				),
-				'css' => array(
-					'requires' => 'codemirror-xml',
-					'has' => array('js', 'css')
-				),
-				'clike' => array(
-					'requires' => 'codemirror-xml',
-					'has' => array('js', 'css')
-				),
-				'php' => array(
-					'requires' => 'codemirror-xml',
-					'has' => array('js')
-				)
-			);
-
-			foreach ($resources as $type => $config) {
-				foreach ($config['has'] as $r_type) {
-					switch ($r_type) {
-						case 'js':
-							wp_enqueue_script('codemirror-'.$type, $this->lib_url.'/'.self::CODEMIRROR.'/mode/'.$type.'/'.$type.'.js', array($config['requires']), WPI_VERSION);
-							break;
-						case 'css':
-							wp_enqueue_style('codemirror-'.$type, $this->lib_url.'/'.self::CODEMIRROR.'/mode/'.$type.'/'.$type.'.css', array($config['requires']), WPI_VERSION);
-							break;
-					}
-				}
-			}
-
-			wp_enqueue_script('wp-interactive-js', '/index.php?wpi_action=wpi_js', array('jquery', 'codemirror'), WPI_VERSION);
-			wp_enqueue_style('wp-interactive-css', '/index.php?wpi_action=wpi_css', array(), WPI_VERSION, 'all');
+			wp_enqueue_script('wp-interactive-js', '/index.php?wpi_action=wpi_js', array('jquery', 'wp-codemirror', 'code-editor'), WPI_VERSION);
+			wp_enqueue_style('wp-interactive-css', '/index.php?wpi_action=wpi_css', array('wp-codemirror', 'code-editor'), WPI_VERSION, 'all');
 		}
 	}
 
-	public function admin_menu() {
+	public function admin_menu(): void {
 		$this->menu_item_id = add_submenu_page('tools.php', __('WP Interactive', self::BASENAME), __('WP Interactive', self::BASENAME), 'manage_options', self::BASENAME, array($this, 'admin_page'));
 		add_action('load-'.$this->menu_item_id, array( $this, 'help_tab' ) );
 	}
 
-	public function help_tab() {
+	public function help_tab(): void {
 		$contextual_help = $this->load_view('contextual-help');
 		$screen = get_current_screen();
 		$screen->add_help_tab( array(
@@ -106,7 +71,7 @@ class wp_interactive {
 
 // Core
 
-	protected function process() {
+	protected function process(): array {
 		$code = stripslashes($_POST['code']);
 		$eval = $message = null;
 
@@ -158,7 +123,7 @@ class wp_interactive {
 		return compact('success', 'eval', 'message');
 	}
 
-	protected function return_result($result) {
+	protected function return_result(array $result): void {
 		header('content-type: text/javascript');
 		$json = json_encode($result);
 		if (json_last_error() != JSON_ERROR_NONE) {
@@ -175,18 +140,18 @@ class wp_interactive {
 		exit;
 	}
 
-	protected function set_error_handler() {
+	protected function set_error_handler(): void {
 		$this->old_error_reporting = ini_get('error_reporting');
 		error_reporting(-1);
 		set_error_handler(array($this, 'handle_errors'));
 	}
 
-	protected function restore_error_handler() {
+	protected function restore_error_handler(): void {
 		ini_set('error_reporting', $this->old_error_reporting);
 		restore_error_handler();
 	}
 
-	public function handle_errors($errno, $errstr, $errfile, $errline) {
+	public function handle_errors(int $errno, string $errstr, string $errfile, int $errline): bool {
 		switch ($errno) {
 			case E_USER_ERROR:
 				$this->return_result(array(
@@ -204,7 +169,7 @@ class wp_interactive {
 
 // Utils
 
-	public function load_view($viewfile, $params = array()) {
+	public function load_view(string $viewfile, array $params = array()): string {
 		$ret = '';
 		$view_filename = $this->base_path.'/views/'.$viewfile.'.php';
 
@@ -218,13 +183,13 @@ class wp_interactive {
 		return $ret;
 	}
 
-	public function get_snippets() {
+	public function get_snippets(): array {
 		$snippets = apply_filters('wpi-snippets', $GLOBALS['wpi_snippets']);
 		ksort($snippets);
 		return $snippets;
 	}
 
-	public function humanize($str) {
+	public function humanize(string $str): string {
 		$replacements = array(
 			'-' => ' ',
 			'_' => ' '
@@ -232,7 +197,7 @@ class wp_interactive {
 		return ucwords(strtr($str, $replacements));
 	}
 
-	protected function default_text() {
+	protected function default_text(): string {
 		return '<?php'.PHP_EOL.PHP_EOL.PHP_EOL."\t".PHP_EOL.'?>';
 	}
 }
