@@ -19,13 +19,13 @@ $wpi_snippets['rebuild_image_thumbnails'] = <<<REBUILDTHUMBS
 ));
 
 if (!empty(\$atts->posts)) {
-	foreach (\$atts->posts as \$post_id) {
-		\$image_data = wp_get_attachment_metadata(\$post_id);
-		echo '{$rit_status} '.\$post_id.PHP_EOL;
-		\$new_data = wp_generate_attachment_metadata(\$post_id, WP_CONTENT_DIR.'/uploads/'.\$image_data['file']);
-		wp_update_attachment_metadata(\$post_id, \$new_data);
-		//print_r(\$new_data);
-	}
+  foreach (\$atts->posts as \$post_id) {
+    \$image_data = wp_get_attachment_metadata(\$post_id);
+    echo '{$rit_status} '.\$post_id.PHP_EOL;
+    \$new_data = wp_generate_attachment_metadata(\$post_id, WP_CONTENT_DIR.'/uploads/'.\$image_data['file']);
+    wp_update_attachment_metadata(\$post_id, \$new_data);
+    //print_r(\$new_data);
+  }
 }
 REBUILDTHUMBS;
 
@@ -46,10 +46,10 @@ if (!empty(\$meta)) {
       \$value = maybe_unserialize(\$value);
 
       if (is_scalar(\$value)) {
-	var_dump(\$value);
+        var_dump(\$value);
       }
       else {
-	print_r(\$value);
+        print_r(\$value);
       }
     }
     echo '-------------------'.PHP_EOL;
